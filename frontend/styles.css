@@ -287,7 +287,6 @@ h3 {
   border: 1px solid var(--line);
 }
 
-/* Scenario Drawer */
 .chevron-icon {
   transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -302,7 +301,6 @@ h3 {
   grid-template-rows: 0fr;
   opacity: 0;
   background: var(--surface-rail);
-  border-top: 1px solid var(--line);
   border-top: 1px solid transparent;
   transition: grid-template-rows 220ms cubic-bezier(0.16, 1, 0.3, 1),
     opacity 180ms ease,
@@ -323,7 +321,6 @@ h3 {
 .drawer-inner {
   max-width: 1360px;
   margin: 0 auto;
-  padding: 12px 32px;
   padding: 18px 32px;
   display: grid;
   gap: 14px;
@@ -331,16 +328,12 @@ h3 {
 
 .scenario-header {
   display: flex;
-  align-items: center;
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
 }
 
-.drawer-copy {
-  display: grid;
-  gap: 2px;
 .scenario-copy {
   max-width: 66ch;
 }
@@ -357,7 +350,6 @@ h3 {
   color: var(--ink-secondary);
 }
 
-.drawer-copy span {
 .scenario-meta {
   display: flex;
   align-items: center;
@@ -421,7 +413,6 @@ h3 {
   color: var(--ink-muted);
 }
 
-.drawer-controls {
 .scenario-val {
   margin-top: 4px;
   font-size: 0.9375rem;
@@ -459,8 +450,6 @@ h3 {
   padding: 10px 32px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
   gap: 10px;
   font-size: 0.8125rem;
   font-weight: 600;
@@ -631,17 +620,11 @@ h3 {
   border-radius: 0;
   padding: 0 0 24px;
   margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  flex-wrap: wrap;
   display: grid;
   gap: 14px;
 }
 
 .empty-guide-text {
-  max-width: 58ch;
   max-width: 66ch;
 }
 
@@ -653,12 +636,6 @@ h3 {
   margin-top: 4px;
   font-size: 0.8125rem;
   color: var(--ink-secondary);
-}
-
-.empty-guide-actions {
-  display: grid;
-  gap: 10px;
-  justify-items: start;
 }
 
 .edit-banner {
@@ -920,7 +897,6 @@ h3 {
   cursor: pointer;
 }
 
-.icon-btn:hover {
 .icon-btn:hover:not(:disabled) {
   border-color: var(--danger-line);
   color: var(--danger-ink);
@@ -1262,9 +1238,6 @@ td.num {
 }
 
 .alert-flat.warn {
-  background: var(--danger-bg);
-  border-color: var(--danger-line);
-  color: var(--danger-ink);
   background: #fffbeb;
   border-color: var(--warn-line);
   color: var(--warn-ink);
@@ -1362,8 +1335,6 @@ td.num {
 }
 
 .swatch.demo {
-  background: var(--warn-bar);
-  border: 1px dashed #78350f;
   background: var(--warn-bg);
   border: 1.5px dashed var(--warn-bar);
 }
@@ -1431,14 +1402,12 @@ td.num {
 }
 
 .fill.demo {
-  background: var(--warn-bar);
   background: var(--warn-bg);
   border: 1.5px dashed var(--warn-bar);
 }
 
 .bar-row {
   display: grid;
-  grid-template-columns: 175px minmax(0, 1fr) 104px;
   grid-template-columns: 175px minmax(0, 1fr) 122px;
   gap: 10px;
   align-items: center;
@@ -1613,7 +1582,6 @@ section[role="tabpanel"]:not([hidden]),
 
   .tabs {
     gap: 14px;
-    width: 100%;
     width: calc(100% + 32px);
     margin: 0 -16px;
     padding: 0 16px;
@@ -1636,11 +1604,9 @@ section[role="tabpanel"]:not([hidden]),
   }
 
   .ing-row {
-    grid-template-columns: minmax(0, 1fr) 96px auto 34px;
     grid-template-columns: minmax(0, 1fr) auto 34px;
   }
 
-  .ing-row select {
   .ing-row select,
   .ing-row input[type="text"] {
     grid-column: 1 / -1;
@@ -1672,7 +1638,6 @@ section[role="tabpanel"]:not([hidden]),
     border-radius: var(--radius);
     padding: 12px;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-columns: auto minmax(0, 1fr);
     gap: 8px 12px;
   }
@@ -1749,7 +1714,6 @@ section[role="tabpanel"]:not([hidden]),
   }
 
   .bar-row {
-    grid-template-columns: 112px minmax(0, 1fr) 86px;
     grid-template-columns: 108px minmax(0, 1fr) minmax(94px, auto);
   }
 

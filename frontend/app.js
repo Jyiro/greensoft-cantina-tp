@@ -1210,7 +1210,6 @@
         prodFrag.appendChild(crearEl("span", "badge demo", "demo"));
       }
       return [
-        crearEl("strong", "", r.producto),
         prodFrag,
         r.fuente_dato,
         r.trazabilidad,
@@ -1394,7 +1393,6 @@
       itemsDesglose = porCategoria.map(function (c) {
         return { n: c.nombre, v: c.co2e_kg, demo: c.demo };
       });
-      renderBarras("gDesglose", itemsDesglose, "", "kg", 1);
       renderBarras("gDesglose", itemsDesglose, "", "kg CO₂e", 1);
     }
 
@@ -1458,15 +1456,7 @@
     }
   }
 
-  async function copiarAlPortapapeles(texto) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      try {
-        await navigator.clipboard.writeText(texto);
-        return true;
-      } catch (e) {
-        /* Fallback clásico cuando file:// o permisos bloquean Clipboard API */
-      }
-    }
+  function copiarConTextarea(texto) {
     var ta = document.createElement("textarea");
     ta.value = texto;
     ta.setAttribute("readonly", "");
@@ -1484,6 +1474,18 @@
     }
     document.body.removeChild(ta);
     return Boolean(ok);
+  }
+
+  async function copiarAlPortapapeles(texto) {
+    if (window.location.protocol !== "file:" && window.isSecureContext && navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(texto);
+        return true;
+      } catch (e) {
+        return copiarConTextarea(texto);
+      }
+    }
+    return copiarConTextarea(texto);
   }
 
   function descargarJson() {
@@ -1515,7 +1517,6 @@
   }
 
   function bindEventos() {
-    document.querySelectorAll('.tab-btn[role="tab"]').forEach(function (btn) {
     var tabButtons = Array.prototype.slice.call(document.querySelectorAll('.tab-btn[role="tab"]'));
     tabButtons.forEach(function (btn, idx) {
       btn.addEventListener("click", function () { cambiarTab(btn.dataset.tab); });
@@ -1534,17 +1535,11 @@
     });
 
     $("btnToggleEscenario").addEventListener("click", function () {
-      var drawer = $("drawerEscenario");
-      var abierto = drawer.hidden;
-      drawer.hidden = !abierto;
-      $("btnToggleEscenario").setAttribute("aria-expanded", String(abierto));
       var abierto = !$("drawerEscenario").classList.contains("open");
       setDrawerAbierto(abierto);
     });
 
     $("btnCerrarDrawer").addEventListener("click", function () {
-      $("drawerEscenario").hidden = true;
-      $("btnToggleEscenario").setAttribute("aria-expanded", "false");
       setDrawerAbierto(false);
     });
 
@@ -1569,16 +1564,11 @@
 
     document.querySelectorAll("[data-preset]").forEach(function (btn) {
       btn.addEventListener("click", function () {
-        var incluirDemo = $("drawerEscenario").hidden
-          ? $("chkDemoEmpty").checked
-          : $("chkDemoDrawer").checked;
         var drawerAbierto = $("drawerEscenario").classList.contains("open");
         var incluirDemo = drawerAbierto
           ? $("chkDemoDrawer").checked
           : $("chkDemoEmpty").checked;
         cargarEscenario(btn.dataset.preset, incluirDemo);
-        $("drawerEscenario").hidden = true;
-        $("btnToggleEscenario").setAttribute("aria-expanded", "false");
         setDrawerAbierto(false);
       });
     });

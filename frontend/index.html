@@ -42,29 +42,12 @@
 
         <button type="button" id="btnToggleEscenario" class="btn sec sm" aria-expanded="false" aria-controls="drawerEscenario">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Escenario del relevamiento
           <span>Escenario del relevamiento</span>
           <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
       </div>
     </div>
 
-    <div id="drawerEscenario" class="drawer" hidden>
-      <div class="drawer-inner">
-        <div class="drawer-copy">
-          <strong>Cargar escenario del relevamiento</strong>
-          <span>Reemplaza o inicia la tabla con los volúmenes estimados del trabajo de campo en la cantina.</span>
-        </div>
-        <div class="drawer-controls">
-          <label class="check-inline">
-            <input type="checkbox" id="chkDemoDrawer">
-            <span>Incluir bebidas y snacks (demo)</span>
-          </label>
-          <div class="btn-group">
-            <button type="button" class="btn sec sm" data-preset="minimo">Mínimo (~29 t)</button>
-            <button type="button" class="btn sm" data-preset="intermedio">Intermedio (~98 t)</button>
-            <button type="button" class="btn sec sm" data-preset="maximo">Máximo (~236 t)</button>
-            <button type="button" class="btn ghost sm" id="btnCerrarDrawer" aria-label="Cerrar panel de escenario">Cerrar</button>
     <div id="drawerEscenario" class="drawer" aria-hidden="true">
       <div class="drawer-overflow">
         <div class="drawer-inner">
@@ -132,11 +115,6 @@
       <div class="workspace-split">
         <div class="main-pane">
           <div id="emptyOnboarding" class="empty-guide" hidden>
-            <div class="empty-guide-text">
-              <h2>Empezá con el relevamiento o cargá una compra</h2>
-              <p>Registrá los alimentos y bebidas comprados en el año o cargá en un clic el escenario estimado de la cantina para explorar los cálculos y resultados.</p>
-            </div>
-            <div class="empty-guide-actions">
             <div class="scenario-header">
               <div class="empty-guide-text">
                 <h2>Empezá con un escenario del relevamiento o cargá una compra</h2>
@@ -146,11 +124,6 @@
                 <input type="checkbox" id="chkDemoEmpty" checked>
                 <span>Incluir bebidas y snacks (demo)</span>
               </label>
-              <div class="btn-group">
-                <button type="button" class="btn" data-preset="intermedio">Cargar escenario intermedio</button>
-                <button type="button" class="btn sec" data-preset="minimo">Mínimo</button>
-                <button type="button" class="btn sec" data-preset="maximo">Máximo</button>
-              </div>
             </div>
 
             <div class="scenario-grid" role="group" aria-label="Escenarios estimados para empezar">
