@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cantina · Huella de carbono</title>
+  <title>Cantina UTN · Huella de carbono</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Source+Sans+3:wght@400;500;600;700&display=swap">
@@ -20,31 +20,67 @@
             <img src="assets/logo-greensoftware.png" alt="Green Software" class="logo-img logo-gs">
           </div>
           <div class="brand-text">
-            <h1>Cantina · Huella de carbono</h1>
-            <p>Dimensión 11 · Alimentación · Alcance 3 · Período anual</p>
+            <h1>Cantina UTN · Huella de carbono</h1>
+            <p>Calcula cuánto CO₂e generan al año los alimentos y bebidas que compra la cantina (Alcance 3)</p>
           </div>
         </div>
-        <span id="estadoApi" class="status-pill" role="status">API simulada</span>
+        <span id="estadoApi" class="status-pill" role="status" title="Sin servidor externo configurado: los datos se guardan en este navegador y el envío se simula localmente">Modo local (sin servidor)</span>
       </div>
 
       <div class="header-nav">
-        <nav class="tabs" role="tablist" aria-label="Secciones del módulo">
+        <nav class="tabs" role="tablist" aria-label="Pasos del módulo">
           <button type="button" role="tab" class="tab-btn" id="tabBtn-carga" aria-selected="true" aria-controls="tab-carga" data-tab="carga">
-            Carga de datos <span id="badgeRegistros" class="tab-count" hidden>0</span>
+            1. Carga de datos <span id="badgeRegistros" class="tab-count" hidden>0</span>
           </button>
           <button type="button" role="tab" class="tab-btn" id="tabBtn-calculo" aria-selected="false" aria-controls="tab-calculo" data-tab="calculo">
-            Cálculo y trazabilidad
+            2. Cálculo paso a paso
           </button>
           <button type="button" role="tab" class="tab-btn" id="tabBtn-resultados" aria-selected="false" aria-controls="tab-resultados" data-tab="resultados">
-            Resultados
+            3. Resultados y envío
           </button>
         </nav>
 
-        <button type="button" id="btnToggleEscenario" class="btn sec sm" aria-expanded="false" aria-controls="drawerEscenario">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span>Escenario del relevamiento</span>
-          <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
+        <div class="header-actions">
+          <button type="button" id="btnToggleGuia" class="btn ghost sm" aria-expanded="false" aria-controls="drawerGuia">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span>¿Cómo funciona?</span>
+          </button>
+
+          <button type="button" id="btnToggleEscenario" class="btn sec sm" aria-expanded="false" aria-controls="drawerEscenario">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Escenarios estimados</span>
+            <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="drawerGuia" class="drawer" aria-hidden="true">
+      <div class="drawer-overflow">
+        <div class="drawer-inner">
+          <div class="scenario-header">
+            <div class="scenario-copy">
+              <strong>Guía rápida del módulo</strong>
+              <p>Este módulo corresponde a la Dimensión 11 (Alimentación y Cantina) del proyecto Campus CO₂ en la UTN FRC.</p>
+            </div>
+            <button type="button" class="btn ghost sm" id="btnCerrarGuia" aria-label="Cerrar guía rápida">Cerrar</button>
+          </div>
+
+          <div class="guide-grid">
+            <div class="guide-cell">
+              <strong>Qué mide este sistema</strong>
+              <p>Estima las emisiones anuales de gases de efecto invernadero (kg y toneladas de CO₂e) de los alimentos y bebidas que compra la cantina, desde su producción y envase hasta que llegan al local. No suma electricidad ni residuos.</p>
+            </div>
+            <div class="guide-cell">
+              <strong>Cómo se usa en 3 pasos</strong>
+              <p>1) En Carga de datos ingresás las compras anuales o cargás un escenario estimado. 2) En Cálculo paso a paso verificás las conversiones a kg y los factores usados. 3) En Resultados comparás peso físico vs. emisiones y exportás el JSON.</p>
+            </div>
+            <div class="guide-cell">
+              <strong>Por qué pueden verse datos cargados</strong>
+              <p>Los registros se guardan automáticamente en este navegador (localStorage). Como todavía no hay facturas anuales reales de la cantina, los 3 escenarios estimados permiten probar y mostrar el sistema completo.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -53,13 +89,13 @@
         <div class="drawer-inner">
           <div class="scenario-header">
             <div class="scenario-copy">
-              <strong>Escenarios estimados del relevamiento</strong>
-              <p>Como todavía no contamos con facturas reales del concesionario, estos tres escenarios precargan compras anuales estimadas de la cantina según sus días de apertura y volumen diario de ventas.</p>
+              <strong>Precargar un escenario estimado del relevamiento</strong>
+              <p>Como todavía no contamos con facturas reales del concesionario, estos tres escenarios cargan compras anuales estimadas según días de apertura y volumen de ventas. Al elegir uno se reemplaza la lista actual.</p>
             </div>
             <div class="scenario-meta">
               <label class="check-inline">
-                <input type="checkbox" id="chkDemoDrawer" checked>
-                <span>Incluir bebidas y snacks (demo)</span>
+                <input type="checkbox" id="chkBebidasDrawer" checked>
+                <span>Incluir bebidas envasadas y snacks</span>
               </label>
               <button type="button" class="btn ghost sm" id="btnCerrarDrawer" aria-label="Cerrar panel de escenarios">Cerrar</button>
             </div>
@@ -76,14 +112,14 @@
             <button type="button" class="scenario-option recommended" data-preset="intermedio">
               <span class="scenario-title">Intermedio · Estimación base</span>
               <span class="scenario-desc">275 días/año · ~55 sándwiches y 90 cafés/día</span>
-              <strong class="scenario-val" data-scenario-val="intermedio">117,9 toneladas de CO₂e/año</strong>
+              <strong class="scenario-val" data-scenario-val="intermedio">118,0 toneladas de CO₂e/año</strong>
               <span class="scenario-cta">Cargar escenario intermedio</span>
             </button>
 
             <button type="button" class="scenario-option" data-preset="maximo">
               <span class="scenario-title">Máximo · Actividad alta</span>
               <span class="scenario-desc">300 días/año · ~80 sándwiches y 120 cafés/día</span>
-              <strong class="scenario-val" data-scenario-val="maximo">240,0 toneladas de CO₂e/año</strong>
+              <strong class="scenario-val" data-scenario-val="maximo">240,2 toneladas de CO₂e/año</strong>
               <span class="scenario-cta">Cargar escenario máximo</span>
             </button>
           </div>
@@ -114,15 +150,37 @@
     <section id="tab-carga" role="tabpanel" aria-labelledby="tabBtn-carga">
       <div class="workspace-split">
         <div class="main-pane">
+          <div class="tab-intro">
+            <h2>Paso 1 · Cargá las compras anuales de la cantina</h2>
+            <p>Registrá los alimentos y bebidas comprados durante todo un año (por producto suelto o por receta elaborada). Con cada registro el sistema calcula la masa en kg y las emisiones de CO₂e que alimentan las demás pestañas.</p>
+          </div>
+
+          <div id="datosContextoBanner" class="context-strip" hidden>
+            <div class="context-strip-copy">
+              <strong id="datosContextoTitulo"></strong>
+              <p id="datosContextoDesc"></p>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn sec sm" id="btnCambiarEscenarioCtx">Cambiar escenario</button>
+              <span id="vaciarCtxWrap">
+                <button type="button" class="btn danger-outline sm" id="btnVaciarCtx">Vaciar lista</button>
+              </span>
+              <span id="vaciarCtxConfirmWrap" class="confirm-inline" hidden>
+                <button type="button" class="btn danger sm" id="btnVaciarCtxConfirm">Confirmar vaciado</button>
+                <button type="button" class="btn ghost sm" id="btnVaciarCtxCancel">Cancelar</button>
+              </span>
+            </div>
+          </div>
+
           <div id="emptyOnboarding" class="empty-guide" hidden>
             <div class="scenario-header">
               <div class="empty-guide-text">
-                <h2>Empezá con un escenario del relevamiento o cargá una compra</h2>
-                <p>Como todavía no contamos con facturas reales del concesionario, podés cargar una de estas tres estimaciones anuales según días de apertura y volumen de ventas, o empezar desde cero en el formulario.</p>
+                <h2>Todavía no hay compras cargadas: cargá un escenario estimado o empezá abajo</h2>
+                <p>Si querés recorrer y explicar el sistema ahora mismo sin facturas reales, elegí una de estas tres estimaciones del relevamiento. Si preferís ingresar datos propios, completá el formulario de abajo.</p>
               </div>
               <label class="check-inline">
-                <input type="checkbox" id="chkDemoEmpty" checked>
-                <span>Incluir bebidas y snacks (demo)</span>
+                <input type="checkbox" id="chkBebidasEmpty" checked>
+                <span>Incluir bebidas envasadas y snacks</span>
               </label>
             </div>
 
@@ -137,14 +195,14 @@
               <button type="button" class="scenario-option recommended" data-preset="intermedio">
                 <span class="scenario-title">Intermedio · Estimación base</span>
                 <span class="scenario-desc">275 días/año · ~55 sándwiches y 90 cafés/día</span>
-                <strong class="scenario-val" data-scenario-val="intermedio">117,9 toneladas de CO₂e/año</strong>
+                <strong class="scenario-val" data-scenario-val="intermedio">118,0 toneladas de CO₂e/año</strong>
                 <span class="scenario-cta">Cargar escenario intermedio</span>
               </button>
 
               <button type="button" class="scenario-option" data-preset="maximo">
                 <span class="scenario-title">Máximo · Actividad alta</span>
                 <span class="scenario-desc">300 días/año · ~80 sándwiches y 120 cafés/día</span>
-                <strong class="scenario-val" data-scenario-val="maximo">240,0 toneladas de CO₂e/año</strong>
+                <strong class="scenario-val" data-scenario-val="maximo">240,2 toneladas de CO₂e/año</strong>
                 <span class="scenario-cta">Cargar escenario máximo</span>
               </button>
             </div>
@@ -166,17 +224,21 @@
               </div>
             </div>
 
+            <p id="modoAyuda" class="mode-help">Usá este modo para productos comprados por peso, volumen o envase cerrado (ej.: leche en litros, queso en kg, gaseosas de 500 ml).</p>
+
             <form id="form" novalidate>
               <div class="form-grid">
                 <div class="field">
                   <label for="edificio">Edificio</label>
                   <select id="edificio"></select>
+                  <p class="hint">Lugar donde funciona la cantina relevada.</p>
                   <div class="msg-err" data-for="edificio"></div>
                 </div>
 
                 <div class="field">
                   <label for="anio">Año del período</label>
                   <input id="anio" type="number" min="2000" max="2100" value="2026" inputmode="numeric">
+                  <p class="hint">El inventario mide compras de un año completo.</p>
                   <div class="msg-err" data-for="anio"></div>
                 </div>
               </div>
@@ -185,12 +247,14 @@
                 <div class="field">
                   <label for="categoria">Categoría de alimento</label>
                   <select id="categoria"></select>
+                  <p class="hint">Define el factor de emisión (kg CO₂e por kg) que se aplica.</p>
                   <div class="msg-err" data-for="categoria"></div>
                 </div>
 
                 <div class="field">
                   <label for="producto">Producto</label>
                   <input id="producto" type="text" placeholder="Ej.: Coca-Cola 500 ml">
+                  <p class="hint">Nombre descriptivo para identificarlo en las tablas.</p>
                   <div class="msg-err" data-for="producto"></div>
                 </div>
 
@@ -198,6 +262,7 @@
                   <div class="field">
                     <label for="cantidad">Cantidad comprada en el año</label>
                     <input id="cantidad" type="number" min="0" step="any" placeholder="Ej.: 150" inputmode="decimal">
+                    <p class="hint">Total anual acumulado (no por día ni por mes).</p>
                     <div class="msg-err" data-for="cantidad"></div>
                   </div>
 
@@ -210,12 +275,13 @@
                       <option value="l">litros</option>
                       <option value="ml">ml</option>
                     </select>
+                    <p class="hint" id="unidadHint">Requiere indicar el peso de una unidad en kg.</p>
                   </div>
 
                   <div class="field" id="pesoBox">
                     <label for="peso">Peso por unidad (kg)</label>
                     <input id="peso" type="number" min="0" step="any" placeholder="Ej.: 0.5" inputmode="decimal">
-                    <p class="hint">Ver el gramaje en la etiqueta.</p>
+                    <p class="hint">Peso neto de 1 unidad en kg (ej.: 500 ml = 0,5 · 60 g = 0,06).</p>
                     <div class="msg-err" data-for="peso"></div>
                   </div>
                 </div>
@@ -223,7 +289,7 @@
 
               <div id="camposReceta" hidden>
                 <div class="recipe-presets">
-                  <span class="hint">Plantillas del relevamiento:</span>
+                  <span class="hint">Elegí una plantilla editable del relevamiento o cargá tus propios ingredientes:</span>
                   <div class="chip-row" id="recipeTemplates"></div>
                 </div>
 
@@ -231,19 +297,24 @@
                   <div class="field">
                     <label for="recetaNombre">Producto elaborado</label>
                     <input id="recetaNombre" type="text" placeholder="Ej.: Sándwich de milanesa">
+                    <p class="hint">Nombre del producto tal como lo vende la cantina.</p>
                     <div class="msg-err" data-for="recetaNombre"></div>
                   </div>
 
                   <div class="field">
                     <label for="recetaCantidad">Cantidad vendida en el año (unidades)</label>
                     <input id="recetaCantidad" type="number" min="0" step="any" placeholder="Ej.: 1500" inputmode="decimal">
+                    <p class="hint">El sistema multiplica cada ingrediente por esta cantidad anual.</p>
                     <div class="msg-err" data-for="recetaCantidad"></div>
                   </div>
                 </div>
 
                 <div class="ingredients-block">
                   <div class="ingredients-head">
-                    <h3>Ingredientes por unidad elaborada</h3>
+                    <div>
+                      <h3>Ingredientes por unidad elaborada</h3>
+                      <p class="hint">Peso en kg de cada ingrediente que lleva UNA sola unidad (ej.: 100 g = 0,1 kg).</p>
+                    </div>
                     <button type="button" id="btnAddIngrediente" class="btn sec sm">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                       Agregar ingrediente
@@ -263,11 +334,13 @@
                     <option>Estimación desde fotos</option>
                     <option>Otra</option>
                   </select>
+                  <p class="hint">De dónde salió la cantidad informada.</p>
                 </div>
 
                 <div class="field">
                   <label for="obs">Observaciones (opcional)</label>
                   <input id="obs" type="text" placeholder="Supuestos, frecuencia de reposición, etc.">
+                  <p class="hint">Aclaraciones útiles para revisar el cálculo luego.</p>
                 </div>
               </div>
 
@@ -286,10 +359,10 @@
               </div>
               <div class="table-filters">
                 <input type="search" id="filtroTexto" class="filter-input" placeholder="Buscar producto o fuente..." aria-label="Buscar registros">
-                <select id="filtroTipo" class="filter-select" aria-label="Filtrar por estado">
+                <select id="filtroTipo" class="filter-select" aria-label="Filtrar por fuente bibliográfica o tipo">
                   <option value="todos">Todos</option>
-                  <option value="verificados">Verificados</option>
-                  <option value="demo">Solo (demo)</option>
+                  <option value="poore">Alimentos básicos (Poore)</option>
+                  <option value="agribalyse">Bebidas y snacks (Agribalyse)</option>
                   <option value="recetas">Solo recetas</option>
                 </select>
               </div>
@@ -298,46 +371,57 @@
           </div>
         </div>
 
-        <aside class="side-rail" aria-label="Cálculo estimado y resumen">
+        <aside class="side-rail" aria-label="Vista previa y resumen">
           <div class="rail-sticky">
-          <div class="rail-block">
-            <div class="rail-head">
-              <h2>Cálculo estimado</h2>
-              <span id="liveBadge" class="badge neutral">Sin completar</span>
+            <div class="rail-block">
+              <div class="rail-head">
+                <h2>Vista previa del cálculo</h2>
+                <span id="liveBadge" class="badge neutral">Sin completar</span>
+              </div>
+              <div class="live-value" id="liveValor">–</div>
+              <p class="live-sub" id="liveDetalle">Elegí una categoría y una cantidad arriba para ver el cálculo al instante antes de guardar el registro.</p>
+              <div class="formula-code" id="liveFormula" hidden></div>
             </div>
-            <div class="live-value" id="liveValor">–</div>
-            <p class="live-sub" id="liveDetalle">Completá categoría y cantidad para previsualizar el impacto antes de guardar.</p>
-            <div class="formula-code" id="liveFormula" hidden></div>
-          </div>
 
-          <div class="rail-block rail-divider">
-            <h2>Resumen del período</h2>
-            <dl class="summary-list">
-              <div class="summary-row">
-                <dt>Total acumulado</dt>
-                <dd id="railTotalT">0,000 t CO₂e</dd>
-              </div>
-              <div class="summary-row">
-                <dt>Masa alimentaria</dt>
-                <dd id="railTotalKg">0,0 kg</dd>
-              </div>
-              <div class="summary-row">
-                <dt>Registros cargados</dt>
-                <dd id="railCount">0</dd>
-              </div>
-              <div class="summary-row">
-                <dt>Participación (demo)</dt>
-                <dd id="railDemoPct">0,0 %</dd>
-              </div>
-            </dl>
-          </div>
+            <div class="rail-block rail-divider">
+              <h2>Resumen acumulado</h2>
+              <dl class="summary-list">
+                <div class="summary-row">
+                  <dt>Total anual</dt>
+                  <dd id="railTotalT">0,000 t CO₂e</dd>
+                </div>
+                <div class="summary-row">
+                  <dt>Masa comprada</dt>
+                  <dd id="railTotalKg">0,0 kg</dd>
+                </div>
+                <div class="summary-row">
+                  <dt>Intensidad promedio</dt>
+                  <dd id="railIntensidad">–</dd>
+                </div>
+                <div class="summary-row">
+                  <dt>Registros cargados</dt>
+                  <dd id="railCount">0</dd>
+                </div>
+              </dl>
 
-          <div class="rail-block rail-divider">
-            <div class="note-flat warn-soft">
-              <strong>Transparencia de factores</strong>
-              <p>Carne vacuna, queso, café, cerdo, pollo, huevos, leche y harinas usan factores con fuente científica. Bebidas y snacks marcados <b>(demo)</b> son valores de demostración.</p>
+              <div id="railNextActions" class="rail-next" hidden>
+                <button type="button" class="btn sec sm" id="btnIrCalculo">
+                  <span>Paso 2: Ver cálculo paso a paso</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+                <button type="button" class="btn sm" id="btnIrResultados">
+                  <span>Paso 3: Ver resultados y gráficos</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
             </div>
-          </div>
+
+            <div class="rail-block rail-divider">
+              <div class="note-flat">
+                <strong>Fuentes científicas de los factores</strong>
+                <p>Los 8 alimentos básicos usan <b>Poore y Nemecek (2018)</b> vía Our World in Data, y las 5 categorías de bebidas envasadas y snacks usan <b>ADEME Agribalyse v3.2</b> (excluyendo el consumo doméstico). Todas cubren desde la producción y el envase hasta el comercio minorista.</p>
+              </div>
+            </div>
           </div>
         </aside>
       </div>
@@ -345,22 +429,35 @@
 
     <section id="tab-calculo" role="tabpanel" aria-labelledby="tabBtn-calculo" hidden>
       <div class="tab-container">
+        <div class="tab-intro">
+          <h2>Paso 2 · Cómo se calculan las emisiones</h2>
+          <p>En alimentación no medimos potencia eléctrica ni horas de uso: el impacto depende de cuántos kilos se compran en el año y de qué alimento se trata. Acá podés auditar cada cuenta y ver los 13 factores científicos aplicados.</p>
+        </div>
+
         <div class="formula-banner">
           <div>
             <h2>Fórmula aplicada</h2>
-            <p>En alimentación la actividad es la masa comprada en el año, no la potencia ni las horas de uso de los equipos.</p>
+            <p>1) Convertimos cada compra a kilos. 2) Multiplicamos por su factor de emisión (FE): los kg de CO₂e emitidos al producir, procesar, envasar y llevar 1 kg hasta el comercio.</p>
           </div>
           <div class="formula-equations">
             <code>kg CO₂e = cantidad × peso unitario (kg) × FE (kg CO₂e/kg)</code>
-            <span class="hint">Conversiones: 1 kg = 1.000 g · bebidas: 1 litro = 1 kg (1.000 ml = 1 kg) · recetas: suma de cada ingrediente</span>
+            <span class="hint">Conversiones: 1 kg = 1.000 g · líquidos: 1 litro = 1 kg (1.000 ml = 1 kg) · recetas: suma de cada ingrediente</span>
           </div>
+        </div>
+
+        <div id="calcEmptyBar" class="context-strip" hidden>
+          <div class="context-strip-copy">
+            <strong>Todavía no hay compras cargadas para auditar</strong>
+            <p>Cargá un escenario estimado o un registro propio en el Paso 1 para ver la conversión a kilos y la multiplicación de cada fila.</p>
+          </div>
+          <button type="button" class="btn sm" id="btnIrCargaDesdeCalc">Ir al Paso 1: Carga de datos</button>
         </div>
 
         <div class="section-block section-divider">
           <div class="section-head">
             <div>
-              <h2>Detalle por registro</h2>
-              <p class="hint">Cada fila conserva la cuenta exacta con la que se obtuvo el resultado.</p>
+              <h2>Cuenta paso a paso por registro</h2>
+              <p class="hint">Cada fila conserva la conversión a kilogramos y la multiplicación exacta con la que se obtuvo el resultado.</p>
             </div>
           </div>
           <div class="table-wrap" id="tablaCalculo"></div>
@@ -369,24 +466,40 @@
         <div class="section-block section-divider">
           <div class="section-head table-head-wrap">
             <div>
-              <h2>Factores de emisión</h2>
-              <p class="hint">Etapa de ciclo de vida: cuna a comercio minorista (incluye procesamiento, envase y transporte hasta el comercio).</p>
+              <h2>Factores de emisión aplicados (13 categorías)</h2>
+              <p class="hint">Etapa cubierta: cuna a comercio minorista (incluye producción, procesamiento, envase primario y transporte hasta el punto de venta; excluye consumo doméstico).</p>
             </div>
             <div class="segmented" role="group" aria-label="Filtrar factores">
               <button type="button" class="seg-btn active" data-factor-filter="todos" aria-pressed="true">Todos (13)</button>
-              <button type="button" class="seg-btn" data-factor-filter="verificados" aria-pressed="false">Verificados (8)</button>
-              <button type="button" class="seg-btn" data-factor-filter="demo" aria-pressed="false">Demo (5)</button>
+              <button type="button" class="seg-btn" data-factor-filter="poore" aria-pressed="false">Poore y Nemecek (8)</button>
+              <button type="button" class="seg-btn" data-factor-filter="agribalyse" aria-pressed="false">Agribalyse v3.2 (5)</button>
             </div>
           </div>
           <div class="table-wrap" id="tablaFactores"></div>
           <p class="hint footnote">Nota metodológica: la serie base refleja la media actualizada del estudio; el gráfico histórico antiguo usaba medianas menores (ej. 60 kg CO₂e/kg en carne vacuna) que solo se consideran como referencia de sensibilidad.</p>
+        </div>
+
+        <div id="calcNextBar" class="next-step-bar" hidden>
+          <span>¿Ya revisaste las conversiones y los factores? Pasá al resumen final para comparar masa física vs. emisiones y exportar los datos.</span>
+          <button type="button" class="btn sm" id="btnIrResultadosDesdeCalc">Ir al Paso 3: Resultados y envío</button>
         </div>
       </div>
     </section>
 
     <section id="tab-resultados" role="tabpanel" aria-labelledby="tabBtn-resultados" hidden>
       <div class="tab-container">
-        <div id="avisoDemo" class="alert-flat warn" role="status" hidden></div>
+        <div class="tab-intro">
+          <h2>Paso 3 · Resultados anuales y comparación de impacto</h2>
+          <p>Estos indicadores resumen únicamente los registros cargados en el Paso 1. El análisis principal compara qué porcentaje de kilos compra la cantina contra qué porcentaje de emisiones genera cada categoría.</p>
+        </div>
+
+        <div id="resultadosVacio" class="context-strip" hidden>
+          <div class="context-strip-copy">
+            <strong>Todavía no hay datos cargados para graficar</strong>
+            <p>Podés precargar uno de los tres escenarios estimados de la cantina o ingresar compras anuales reales en el Paso 1.</p>
+          </div>
+          <button type="button" class="btn sm" id="btnIrCargaDesdeRes">Ir al Paso 1: Cargar datos o escenario</button>
+        </div>
 
         <div class="kpi-strip" id="kpis"></div>
 
@@ -394,13 +507,12 @@
           <div class="result-panel">
             <div class="panel-head">
               <div>
-                <h2>Masa comprada vs. emisiones</h2>
-                <p class="hint">Porcentaje sobre el total de masa y de CO₂e por categoría</p>
+                <h2>Peso físico vs. huella de carbono</h2>
+                <p class="hint">Compara qué parte de los kilos totales compra la cantina (azul) contra qué parte de las emisiones genera cada categoría (verde)</p>
               </div>
               <div class="legend" aria-hidden="true">
-                <span><i class="swatch mass"></i>% masa</span>
-                <span><i class="swatch em"></i>% emisiones</span>
-                <span><i class="swatch demo"></i>(demo)</span>
+                <span><i class="swatch mass"></i>% del peso (kg)</span>
+                <span><i class="swatch em"></i>% emisiones (CO₂e)</span>
               </div>
             </div>
             <p id="comparativaInsight" class="insight-line" hidden></p>
@@ -410,7 +522,7 @@
           <div class="result-panel">
             <div class="panel-head">
               <div>
-                <h2>Desglose por categoría</h2>
+                <h2>Ranking por categoría</h2>
                 <p class="hint" id="subtituloDesglose">Ordenado de mayor a menor emisión</p>
               </div>
               <div class="segmented" role="group" aria-label="Métrica del desglose">
@@ -427,35 +539,35 @@
           <div class="result-panel">
             <div class="panel-head">
               <div>
-                <h2>Evolución por año</h2>
-                <p class="hint" id="hintAnio">Comparativa anual de emisiones cargadas</p>
+                <h2>Comparación entre años</h2>
+                <p class="hint" id="hintAnio">Compara el total anual emitido entre los distintos períodos cargados</p>
               </div>
             </div>
             <div id="gAnio" class="bars"></div>
           </div>
 
           <div class="result-panel scope-panel">
-            <h2>Consumo eléctrico informativo (no sumado)</h2>
+            <h2>Por qué no se suma la electricidad</h2>
             <p>El relevamiento estimó unos <strong>30.000 kWh/año</strong> en equipos de la cantina (14 equipos de frío, máquina de café, hornos, microondas y tostadora).</p>
-            <p class="hint">Ese consumo pertenece a electricidad (Alcance 2) y no se suma a las emisiones de alimentos (Alcance 3) para evitar doble conteo.</p>
+            <p class="hint">Ese consumo pertenece a Dimensión 1 (Energía eléctrica · Alcance 2). Se muestra aparte como contexto para no sumar dos veces la misma actividad en el inventario de la facultad.</p>
           </div>
         </div>
 
         <div class="api-panel">
           <div class="api-head">
             <div>
-              <h2>Envío y exportación de datos</h2>
-              <p class="hint">Sin servidor configurado en <code>CONFIG.API_BASE</code>, el envío se procesa en la API simulada del navegador con el contrato oficial.</p>
+              <h2>Envío al sistema central y exportación</h2>
+              <p class="hint">La cátedra definió un contrato REST común para todas las dimensiones. Sin servidor configurado en <code>CONFIG.API_BASE</code>, el envío valida los campos y recalcula el total localmente en este navegador.</p>
             </div>
             <div class="btn-group">
-              <button type="button" class="btn" id="btnEnviar">Enviar datos y cálculos</button>
+              <button type="button" class="btn" id="btnEnviar">Simular envío (API)</button>
               <button type="button" class="btn sec" id="btnToggleJson" aria-expanded="false" aria-controls="jsonInspector">Ver JSON</button>
               <button type="button" class="btn sec" id="btnJson">Descargar JSON</button>
               <span id="borrarWrap">
-                <button type="button" class="btn danger-outline" id="btnBorrar">Borrar registros</button>
+                <button type="button" class="btn danger-outline" id="btnBorrar">Vaciar registros</button>
               </span>
               <span id="borrarConfirmWrap" class="confirm-inline" hidden>
-                <button type="button" class="btn danger" id="btnBorrarConfirm">Confirmar borrado</button>
+                <button type="button" class="btn danger" id="btnBorrarConfirm">Confirmar vaciado</button>
                 <button type="button" class="btn ghost sm" id="btnBorrarCancel">Cancelar</button>
               </span>
             </div>
@@ -465,7 +577,7 @@
 
           <div id="jsonInspector" class="json-inspector" hidden>
             <div class="json-inspector-head">
-              <span>Contrato de envío por período y edificio</span>
+              <span>Payload agrupado por año y edificio (POST /resultados)</span>
               <button type="button" class="btn sec sm" id="btnCopiarJson">Copiar JSON</button>
             </div>
             <pre id="jsonPreview"></pre>

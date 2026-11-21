@@ -12,26 +12,28 @@
     DIMENSION: "alimentacion-cantina",
     ALCANCE: 3,
     STORAGE_KEY: "cantina_registros_v3",
-    LEGACY_STORAGE_KEY: "cantina_registros_v2"
+    LEGACY_STORAGE_KEY: "cantina_registros_v2",
+    META_KEY: "cantina_meta_v3"
   };
 
   var UNIDADES = ["unidad", "kg", "g", "l", "ml"];
 
   /* ============ CATÁLOGO DE FACTORES Y EDIFICIOS ============ */
   var FUENTE_POORE = "Poore y Nemecek (2018), via Our World in Data";
+  var FUENTE_AGRIBALYSE = "ADEME Agribalyse v3.2 (2025), excl. consumo";
   var ETAPA = "cuna a comercio minorista";
 
-  function fe(id, categoria, nombre, valor, demo) {
+  function fe(id, categoria, nombre, valor, opts) {
+    var cfg = opts || {};
     return {
       id_factor: id,
       categoria: categoria,
       nombre: nombre,
       valor: valor,
       unidad_base: "kg CO2e/kg",
-      etapa: demo ? "sin dato" : ETAPA,
-      fuente: demo ? "Demo (pendiente)" : FUENTE_POORE,
-      anio_referencia: demo ? null : 2018,
-      demo: Boolean(demo)
+      etapa: cfg.etapa || ETAPA,
+      fuente: cfg.fuente || FUENTE_POORE,
+      anio_referencia: cfg.anio !== undefined ? cfg.anio : 2018
     };
   }
 
@@ -44,11 +46,26 @@
     fe(6, "huevos", "Huevos", 4.67),
     fe(7, "leche", "Leche", 3.15),
     fe(8, "harinas_pan", "Harinas y pan", 1.57),
-    fe(9, "bebidas_gaseosas", "Gaseosas y bebidas azucaradas", 0.6, true),
-    fe(10, "agua", "Agua y aguas saborizadas", 0.2, true),
-    fe(11, "jugos_isotonicos", "Jugos e isotónicos", 0.9, true),
-    fe(12, "energizantes", "Energizantes", 1.0, true),
-    fe(13, "snacks", "Snacks, golosinas y alfajores", 2.5, true)
+    fe(9, "bebidas_gaseosas", "Gaseosas y bebidas azucaradas", 0.49, {
+      fuente: FUENTE_AGRIBALYSE + " · Code_AGB 18018 (Cola)",
+      anio: 2025
+    }),
+    fe(10, "agua", "Agua y aguas saborizadas", 0.32, {
+      fuente: FUENTE_AGRIBALYSE + " · Code_AGB 18430 (Eau embouteillée)",
+      anio: 2025
+    }),
+    fe(11, "jugos_isotonicos", "Jugos e isotónicos", 0.73, {
+      fuente: FUENTE_AGRIBALYSE + " · Mix 50/50 Code_AGB 2012 y 18339",
+      anio: 2025
+    }),
+    fe(12, "energizantes", "Energizantes", 0.68, {
+      fuente: FUENTE_AGRIBALYSE + " · Code_AGB 18352 (Boisson énergisante)",
+      anio: 2025
+    }),
+    fe(13, "snacks", "Snacks, golosinas y alfajores", 3.47, {
+      fuente: FUENTE_AGRIBALYSE + " · Mix cantina Code_AGB 4004, 38105, 24030 y 31012",
+      anio: 2025
+    })
   ];
 
   var MOCK_EDIFICIOS = [
@@ -113,10 +130,10 @@
         { categoria: "cerdo_fiambres", producto: "Cerdo y fiambres en sándwiches", cantidad: 210, unidad: "kg" },
         { categoria: "pollo", producto: "Pollo en sándwiches y milanesas", cantidad: 210, unidad: "kg" }
       ],
-      demoItems: [
-        { categoria: "bebidas_gaseosas", producto: "Gaseosas línea 500 ml (ejemplo)", cantidad: 4000, unidad: "unidad", peso: 0.5 },
-        { categoria: "agua", producto: "Agua mineral 500 ml (ejemplo)", cantidad: 2500, unidad: "unidad", peso: 0.5 },
-        { categoria: "snacks", producto: "Alfajores y snacks 60 g (ejemplo)", cantidad: 2000, unidad: "unidad", peso: 0.06 }
+      bebidasSnacks: [
+        { categoria: "bebidas_gaseosas", producto: "Gaseosas línea 500 ml", cantidad: 4000, unidad: "unidad", peso: 0.5 },
+        { categoria: "agua", producto: "Agua mineral 500 ml", cantidad: 2500, unidad: "unidad", peso: 0.5 },
+        { categoria: "snacks", producto: "Alfajores y snacks 60 g", cantidad: 2000, unidad: "unidad", peso: 0.06 }
       ]
     },
     intermedio: {
@@ -130,10 +147,10 @@
         { categoria: "cerdo_fiambres", producto: "Cerdo y fiambres en sándwiches", cantidad: 453.75, unidad: "kg" },
         { categoria: "pollo", producto: "Pollo en sándwiches y milanesas", cantidad: 453.75, unidad: "kg" }
       ],
-      demoItems: [
-        { categoria: "bebidas_gaseosas", producto: "Gaseosas línea 500 ml (ejemplo)", cantidad: 6000, unidad: "unidad", peso: 0.5 },
-        { categoria: "agua", producto: "Agua mineral 500 ml (ejemplo)", cantidad: 4000, unidad: "unidad", peso: 0.5 },
-        { categoria: "snacks", producto: "Alfajores y snacks 60 g (ejemplo)", cantidad: 3000, unidad: "unidad", peso: 0.06 }
+      bebidasSnacks: [
+        { categoria: "bebidas_gaseosas", producto: "Gaseosas línea 500 ml", cantidad: 6000, unidad: "unidad", peso: 0.5 },
+        { categoria: "agua", producto: "Agua mineral 500 ml", cantidad: 4000, unidad: "unidad", peso: 0.5 },
+        { categoria: "snacks", producto: "Alfajores y snacks 60 g", cantidad: 3000, unidad: "unidad", peso: 0.06 }
       ]
     },
     maximo: {
@@ -147,10 +164,10 @@
         { categoria: "cerdo_fiambres", producto: "Cerdo y fiambres en sándwiches", cantidad: 720, unidad: "kg" },
         { categoria: "pollo", producto: "Pollo en sándwiches y milanesas", cantidad: 720, unidad: "kg" }
       ],
-      demoItems: [
-        { categoria: "bebidas_gaseosas", producto: "Gaseosas línea 500 ml (ejemplo)", cantidad: 9000, unidad: "unidad", peso: 0.5 },
-        { categoria: "agua", producto: "Agua mineral 500 ml (ejemplo)", cantidad: 6000, unidad: "unidad", peso: 0.5 },
-        { categoria: "snacks", producto: "Alfajores y snacks 60 g (ejemplo)", cantidad: 4500, unidad: "unidad", peso: 0.06 }
+      bebidasSnacks: [
+        { categoria: "bebidas_gaseosas", producto: "Gaseosas línea 500 ml", cantidad: 9000, unidad: "unidad", peso: 0.5 },
+        { categoria: "agua", producto: "Agua mineral 500 ml", cantidad: 6000, unidad: "unidad", peso: 0.5 },
+        { categoria: "snacks", producto: "Alfajores y snacks 60 g", cantidad: 4500, unidad: "unidad", peso: 0.06 }
       ]
     }
   };
@@ -195,7 +212,12 @@
   }
 
   function nombreCat(c) {
-    return FACTORES[c] ? FACTORES[c].nombre + (FACTORES[c].demo ? " (demo)" : "") : c;
+    return FACTORES[c] ? FACTORES[c].nombre : c;
+  }
+
+  function esFuenteAgribalyse(cat) {
+    var f = FACTORES[cat];
+    return Boolean(f && String(f.fuente || "").indexOf("Agribalyse") !== -1);
   }
 
   function mostrarAlertaStorage(msg) {
@@ -359,6 +381,7 @@
   var FACTORES = {};
   var EDIFICIOS = [];
   var registros = [];
+  var origenDatos = null;
   var estadoUI = {
     tab: "carga",
     modoCarga: "simple",
@@ -381,6 +404,47 @@
     } catch (e) {
       mostrarAlertaStorage("No se pudieron guardar los cambios en el navegador (almacenamiento lleno o restringido). Podés continuar trabajando y descargar el JSON antes de cerrar.");
       return false;
+    }
+  }
+
+  function guardarMeta() {
+    try {
+      if (origenDatos) {
+        localStorage.setItem(CONFIG.META_KEY, JSON.stringify(origenDatos));
+      } else {
+        localStorage.removeItem(CONFIG.META_KEY);
+      }
+    } catch (e) {
+      /* Almacenamiento restringido */
+    }
+  }
+
+  function limpiarMeta() {
+    origenDatos = null;
+    try {
+      localStorage.removeItem(CONFIG.META_KEY);
+    } catch (e) {
+      /* Ignorar si storage está bloqueado */
+    }
+  }
+
+  function marcarCambioManualEnOrigen() {
+    if (origenDatos && origenDatos.origen === "escenario") {
+      origenDatos.modificado = true;
+    } else {
+      origenDatos = { origen: "manual" };
+    }
+    guardarMeta();
+  }
+
+  function cargarMetaInicial() {
+    try {
+      var raw = localStorage.getItem(CONFIG.META_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : null;
+    } catch (e) {
+      return null;
     }
   }
 
@@ -428,8 +492,6 @@
       masa_kg: masaKg,
       factor_valor: f.valor,
       co2e_kg: co2eKg,
-      usa_demo: Boolean(f.demo),
-      co2e_demo_kg: f.demo ? co2eKg : 0,
       trazabilidad: trazabilidad
     };
   }
@@ -438,8 +500,6 @@
     if (!Array.isArray(r.ingredientes) || !r.ingredientes.length) return null;
     var masaPorUnidad = 0;
     var co2ePorUnidad = 0;
-    var co2eDemoPorUnidad = 0;
-    var usaDemo = false;
     var lineas = [];
     var ingredientesCalculados = [];
 
@@ -451,10 +511,6 @@
       var co2U = kgU * f.valor;
       masaPorUnidad += kgU;
       co2ePorUnidad += co2U;
-      if (f.demo) {
-        usaDemo = true;
-        co2eDemoPorUnidad += co2U;
-      }
       var masaTotalIng = r.cantidad * kgU;
       var co2TotalIng = r.cantidad * co2U;
       var etiquetaIng = ing.nombre || f.nombre;
@@ -466,7 +522,6 @@
         nombre: etiquetaIng,
         kg_por_unidad: kgU,
         factor_valor: f.valor,
-        demo: Boolean(f.demo),
         masa_kg: masaTotalIng,
         co2e_kg: co2TotalIng
       });
@@ -479,8 +534,6 @@
       factor_valor: masaKg > 0 ? co2eKg / masaKg : 0,
       co2e_kg: co2eKg,
       co2e_por_unidad: co2ePorUnidad,
-      usa_demo: usaDemo,
-      co2e_demo_kg: r.cantidad * co2eDemoPorUnidad,
       ingredientes: ingredientesCalculados,
       trazabilidad: fmt(r.cantidad, 0) + " u elaboradas (" + fmt(co2ePorUnidad, 2) + " kg CO₂e/u):\n" + lineas.join("\n")
     };
@@ -504,7 +557,6 @@
         mapa[cat] = {
           categoria: cat,
           nombre: nombreCat(cat),
-          demo: Boolean(FACTORES[cat] && FACTORES[cat].demo),
           masa_kg: 0,
           co2e_kg: 0
         };
@@ -603,9 +655,19 @@
   }
 
   function actualizarPeso() {
-    var esUnidad = $("unidad").value === "unidad";
+    var u = $("unidad").value;
+    var esUnidad = u === "unidad";
     $("pesoBox").hidden = !esUnidad;
     if (!esUnidad) setErr("peso", "");
+    var hints = {
+      unidad: "Requiere indicar el peso de una unidad en kg.",
+      kg: "Valor directo en kilogramos comprados al año.",
+      g: "El sistema divide por 1.000 para pasar gramos a kg.",
+      l: "Asume densidad similar al agua: 1 litro = 1 kg.",
+      ml: "El sistema divide por 1.000 para pasar ml a kg."
+    };
+    var hintEl = $("unidadHint");
+    if (hintEl) hintEl.textContent = hints[u] || "";
   }
 
   function crearIngredienteVacio(categoria, nombre, kgPorUnidad) {
@@ -631,7 +693,7 @@
       Object.values(FACTORES).forEach(function (f) {
         var opt = document.createElement("option");
         opt.value = f.categoria;
-        opt.textContent = f.nombre + (f.demo ? " (demo)" : "");
+        opt.textContent = f.nombre;
         if (f.categoria === ing.categoria) opt.selected = true;
         sel.appendChild(opt);
       });
@@ -710,6 +772,12 @@
     $("modeSimpleBtn").setAttribute("aria-pressed", String(!esReceta));
     $("modeRecetaBtn").classList.toggle("active", esReceta);
     $("modeRecetaBtn").setAttribute("aria-pressed", String(esReceta));
+    var ayudaEl = $("modoAyuda");
+    if (ayudaEl) {
+      ayudaEl.textContent = esReceta
+        ? "Usá este modo para comidas que prepara la cantina (ej.: sándwiches o pizzas). Indicás los ingredientes de UNA unidad y las ventas anuales, y el sistema reparte cada ingrediente en su categoría real."
+        : "Usá este modo para productos comprados por peso, volumen o envase cerrado (ej.: leche en litros, queso en kg, gaseosas de 500 ml).";
+    }
     limpiarErrores();
     if (esReceta) renderIngredientesForm();
     actualizarPreviewEnVivo();
@@ -844,18 +912,18 @@
         badge.className = "badge neutral";
         badge.textContent = "Sin completar";
         valorEl.textContent = "–";
-        detalleEl.textContent = "Elegí una categoría y cantidad para previsualizar el impacto antes de guardar.";
+        detalleEl.textContent = "Elegí una categoría y una cantidad arriba para ver el cálculo al instante antes de guardar el registro.";
         formulaEl.hidden = true;
         return;
       }
 
-      badge.className = f.demo ? "badge demo" : "badge verified";
-      badge.textContent = f.demo ? "(demo) sin fuente" : "Verificado";
+      badge.className = "badge verified";
+      badge.textContent = esFuenteAgribalyse(cat) ? "Agribalyse v3.2" : "Poore y Nemecek";
 
       if (!(cant > 0) || (uni === "unidad" && !(peso > 0))) {
         valorEl.textContent = "FE " + fmt(f.valor, 2);
-        detalleEl.textContent = f.nombre + " (" + f.unidad_base + "). Completá cantidad" +
-          (uni === "unidad" ? " y peso por unidad." : ".");
+        detalleEl.textContent = f.nombre + " (" + fmt(f.valor, 2) + " " + f.unidad_base + "). Completá cantidad" +
+          (uni === "unidad" ? " anual y peso por unidad." : " anual.");
         formulaEl.hidden = true;
         return;
       }
@@ -867,7 +935,7 @@
         peso_unitario_kg: uni === "unidad" ? peso : null
       });
       valorEl.textContent = fmt(calc.co2e_kg, 2) + " kg CO₂e";
-      detalleEl.textContent = "Masa equivalente: " + fmt(calc.masa_kg, 2) + " kg · " + f.etapa;
+      detalleEl.textContent = "Equivale a " + fmt(calc.masa_kg, 2) + " kg de alimento al año (" + f.etapa + ").";
       formulaEl.textContent = calc.trazabilidad + " = " + fmt(calc.co2e_kg, 2) + " kg CO₂e";
       formulaEl.hidden = false;
       return;
@@ -882,28 +950,26 @@
       badge.className = "badge neutral";
       badge.textContent = "Receta";
       valorEl.textContent = "–";
-      detalleEl.textContent = "Elegí una plantilla o cargá al menos un ingrediente con su peso por unidad.";
+      detalleEl.textContent = "Elegí una plantilla o cargá al menos un ingrediente con su peso en kg por unidad.";
       formulaEl.hidden = true;
       return;
     }
 
     var sumaCo2U = 0;
     var sumaKgU = 0;
-    var tieneDemo = false;
     validos.forEach(function (ing) {
       var fi = FACTORES[ing.categoria];
       var kgU = Number(ing.kg_por_unidad);
       sumaKgU += kgU;
       sumaCo2U += kgU * fi.valor;
-      if (fi.demo) tieneDemo = true;
     });
 
-    badge.className = tieneDemo ? "badge demo" : "badge recipe";
-    badge.textContent = tieneDemo ? "Receta c/ (demo)" : "Receta verificada";
+    badge.className = "badge recipe";
+    badge.textContent = "Receta (" + validos.length + " ing.)";
 
     if (!(cantReceta > 0)) {
       valorEl.textContent = fmt(sumaCo2U, 2) + " kg/u";
-      detalleEl.textContent = validos.length + " ingrediente(s) · " + fmt(sumaKgU, 3) + " kg por unidad. Indicá la cantidad anual.";
+      detalleEl.textContent = validos.length + " ingrediente(s) · " + fmt(sumaKgU, 3) + " kg por unidad. Indicá cuántas unidades se venden al año.";
       formulaEl.hidden = true;
       return;
     }
@@ -911,7 +977,7 @@
     var totalRecetaCo2 = cantReceta * sumaCo2U;
     var totalRecetaKg = cantReceta * sumaKgU;
     valorEl.textContent = fmt(totalRecetaCo2, 2) + " kg CO₂e";
-    detalleEl.textContent = fmt(cantReceta, 0) + " u × " + fmt(sumaCo2U, 2) + " kg CO₂e/u · Masa total: " + fmt(totalRecetaKg, 1) + " kg";
+    detalleEl.textContent = fmt(cantReceta, 0) + " u × " + fmt(sumaCo2U, 2) + " kg CO₂e/u · Masa anual: " + fmt(totalRecetaKg, 1) + " kg";
     formulaEl.textContent = validos.map(function (ing) {
       var fi = FACTORES[ing.categoria];
       return (ing.nombre || fi.nombre) + ": " + fmt(Number(ing.kg_por_unidad), 3) + " kg/u × " + fmt(fi.valor, 2);
@@ -919,8 +985,8 @@
     formulaEl.hidden = false;
   }
 
-  /* ============ ESCENARIOS DEL RELEVAMIENTO ============ */
-  function calcularTotalEscenario(clave, incluirDemo) {
+  /* ============ DRAWERS Y ESCENARIOS DEL RELEVAMIENTO ============ */
+  function calcularTotalEscenario(clave, incluirBebidas) {
     var esc = ESCENARIOS[clave];
     if (!esc) return 0;
     var totalKg = 0;
@@ -931,28 +997,39 @@
       totalKg += masa * f.valor;
     }
     esc.items.forEach(sumarItem);
-    if (incluirDemo) esc.demoItems.forEach(sumarItem);
+    if (incluirBebidas) esc.bebidasSnacks.forEach(sumarItem);
     return totalKg / 1000;
   }
 
   function actualizarValoresEscenarios() {
     var drawerAbierto = $("drawerEscenario").classList.contains("open");
-    var incluirDemo = drawerAbierto ? $("chkDemoDrawer").checked : $("chkDemoEmpty").checked;
+    var incluirBebidas = drawerAbierto ? $("chkBebidasDrawer").checked : $("chkBebidasEmpty").checked;
     document.querySelectorAll("[data-scenario-val]").forEach(function (el) {
       var clave = el.dataset.scenarioVal;
-      var toneladas = calcularTotalEscenario(clave, incluirDemo);
+      var toneladas = calcularTotalEscenario(clave, incluirBebidas);
       el.textContent = fmt(toneladas, 1) + " toneladas de CO₂e/año";
     });
   }
 
-  function setDrawerAbierto(abierto) {
-    var drawer = $("drawerEscenario");
-    var btn = $("btnToggleEscenario");
+  function aplicarEstadoDrawer(drawerId, btnId, abierto) {
+    var drawer = $(drawerId);
+    var btn = $(btnId);
+    if (!drawer || !btn) return;
     drawer.classList.toggle("open", abierto);
     drawer.setAttribute("aria-hidden", String(!abierto));
     drawer.inert = !abierto;
     btn.setAttribute("aria-expanded", String(abierto));
+  }
+
+  function setDrawerAbierto(abierto) {
+    if (abierto) aplicarEstadoDrawer("drawerGuia", "btnToggleGuia", false);
+    aplicarEstadoDrawer("drawerEscenario", "btnToggleEscenario", abierto);
     if (abierto) actualizarValoresEscenarios();
+  }
+
+  function setGuiaAbierta(abierto) {
+    if (abierto) aplicarEstadoDrawer("drawerEscenario", "btnToggleEscenario", false);
+    aplicarEstadoDrawer("drawerGuia", "btnToggleGuia", abierto);
   }
 
   function mostrarToastEscenario(msg) {
@@ -974,7 +1051,7 @@
     });
   }
 
-  function cargarEscenario(clave, incluirDemo) {
+  function cargarEscenario(clave, incluirBebidas) {
     var esc = ESCENARIOS[clave];
     if (!esc) return;
     var edificio = EDIFICIOS[0] || { id_edificio: 1, nombre: "Cantina principal" };
@@ -1002,16 +1079,23 @@
     }
 
     esc.items.forEach(function (it, i) { crearItem(it, " · relevamiento cantina", i); });
-    if (incluirDemo) {
-      esc.demoItems.forEach(function (it, j) { crearItem(it, " · categoría de demostración", esc.items.length + j); });
+    if (incluirBebidas) {
+      esc.bebidasSnacks.forEach(function (it, j) { crearItem(it, " · bebidas y snacks (Agribalyse v3.2)", esc.items.length + j); });
     }
 
     registros = nuevos;
+    origenDatos = {
+      origen: "escenario",
+      clave: clave,
+      etiqueta: esc.etiqueta,
+      modificado: false
+    };
     if (estadoUI.editandoId !== null) {
       resetearCamposVariables(false);
     }
     estadoUI.confirmandoBorradoId = null;
     guardarRegistros();
+    guardarMeta();
     render();
     var totalToneladas = nuevos.reduce(function (a, r) { return a + r.co2e_kg; }, 0) / 1000;
     mostrarToastEscenario(
@@ -1019,6 +1103,23 @@
       fmt(totalToneladas, 1) + " toneladas de CO₂e/año)"
     );
     pulsarFeedbackActualizacion();
+  }
+
+  function vaciarTodosLosRegistros() {
+    registros = [];
+    limpiarMeta();
+    if (estadoUI.editandoId !== null) {
+      resetearCamposVariables(true);
+    }
+    estadoUI.confirmandoBorradoId = null;
+    $("borrarConfirmWrap").hidden = true;
+    $("borrarWrap").hidden = false;
+    $("vaciarCtxConfirmWrap").hidden = true;
+    $("vaciarCtxWrap").hidden = false;
+    $("resEnvio").textContent = "";
+    ocultarToastEscenario();
+    guardarRegistros();
+    render();
   }
 
   /* ============ RENDER DE TABLAS Y GRÁFICOS ============ */
@@ -1054,15 +1155,44 @@
     return t;
   }
 
+  function renderContextoDatos() {
+    var banner = $("datosContextoBanner");
+    if (!registros.length) {
+      banner.hidden = true;
+      $("vaciarCtxConfirmWrap").hidden = true;
+      $("vaciarCtxWrap").hidden = false;
+      return;
+    }
+
+    banner.hidden = false;
+    $("vaciarCtxConfirmWrap").hidden = true;
+    $("vaciarCtxWrap").hidden = false;
+
+    var titulo = $("datosContextoTitulo");
+    var desc = $("datosContextoDesc");
+    if (origenDatos && origenDatos.origen === "escenario" && !origenDatos.modificado) {
+      titulo.textContent = "Mostrando escenario precargado: " + origenDatos.etiqueta;
+      desc.textContent = "Son compras anuales estimadas para probar y explicar el módulo porque todavía no hay facturas reales de la cantina (quedan guardadas en este navegador). Podés editar cualquier fila, sumar compras propias o vaciar la lista.";
+    } else if (origenDatos && origenDatos.origen === "escenario" && origenDatos.modificado) {
+      titulo.textContent = "Escenario " + origenDatos.etiqueta + " con modificaciones propias";
+      desc.textContent = "Partiste de un escenario estimado y ya editaste o agregaste registros en este navegador. Los cálculos y resultados reflejan tu lista actual.";
+    } else {
+      titulo.textContent = "Trabajando con " + registros.length + " compra(s) guardada(s) en este navegador";
+      desc.textContent = "Estas compras quedan guardadas localmente (localStorage) aunque recargues la página. Podés sumar más registros, cargar un escenario estimado o vaciar la lista.";
+    }
+  }
+
   function renderRailResumen() {
     var tot = registros.reduce(function (a, r) { return a + r.co2e_kg; }, 0);
     var masa = registros.reduce(function (a, r) { return a + r.masa_kg; }, 0);
-    var demoCo2 = registros.reduce(function (a, r) { return a + (r.co2e_demo_kg || 0); }, 0);
 
     $("railTotalT").textContent = fmt(tot / 1000, 3) + " t CO₂e";
     $("railTotalKg").textContent = fmt(masa, 1) + " kg";
+    $("railIntensidad").textContent = masa > 0 ? fmt(tot / masa, 2) + " kg CO₂e/kg" : "–";
     $("railCount").textContent = String(registros.length);
-    $("railDemoPct").textContent = tot > 0 ? fmt((demoCo2 / tot) * 100, 1) + " %" : "0,0 %";
+
+    var nextActions = $("railNextActions");
+    if (nextActions) nextActions.hidden = registros.length === 0;
 
     var badge = $("badgeRegistros");
     badge.textContent = String(registros.length);
@@ -1072,8 +1202,15 @@
   function obtenerRegistrosFiltrados() {
     var q = estadoUI.filtroTexto.trim().toLowerCase();
     return registros.filter(function (r) {
-      if (estadoUI.filtroTipo === "verificados" && r.usa_demo) return false;
-      if (estadoUI.filtroTipo === "demo" && !r.usa_demo) return false;
+      var usaAgri = r.tipo === "receta" && Array.isArray(r.ingredientes)
+        ? r.ingredientes.some(function (ing) { return esFuenteAgribalyse(ing.categoria); })
+        : esFuenteAgribalyse(r.categoria);
+      var usaPoore = r.tipo === "receta" && Array.isArray(r.ingredientes)
+        ? r.ingredientes.some(function (ing) { return Boolean(FACTORES[ing.categoria] && !esFuenteAgribalyse(ing.categoria)); })
+        : Boolean(FACTORES[r.categoria] && !esFuenteAgribalyse(r.categoria));
+
+      if (estadoUI.filtroTipo === "poore" && !usaPoore) return false;
+      if (estadoUI.filtroTipo === "agribalyse" && !usaAgri) return false;
       if (estadoUI.filtroTipo === "recetas" && r.tipo !== "receta") return false;
       if (!q) return true;
       var haystack = [r.producto, r.fuente_dato, r.observaciones, r.edificio,
@@ -1101,13 +1238,8 @@
       var catCell = document.createDocumentFragment();
       if (r.tipo === "receta") {
         catCell.appendChild(crearEl("span", "badge recipe", "Receta (" + r.ingredientes.length + ")"));
-        if (r.usa_demo) {
-          catCell.appendChild(document.createTextNode(" "));
-          catCell.appendChild(crearEl("span", "badge demo", "demo"));
-        }
       } else {
-        var f = FACTORES[r.categoria];
-        catCell.appendChild(crearEl("span", f && f.demo ? "badge demo" : "badge neutral", nombreCat(r.categoria)));
+        catCell.appendChild(crearEl("span", "badge neutral", nombreCat(r.categoria)));
       }
 
       var prodCell = document.createDocumentFragment();
@@ -1145,6 +1277,8 @@
           registros = registros.filter(function (x) { return x.id !== r.id; });
           estadoUI.confirmandoBorradoId = null;
           if (estadoUI.editandoId === r.id) resetearCamposVariables(true);
+          if (registros.length === 0) limpiarMeta();
+          else marcarCambioManualEnOrigen();
           guardarRegistros();
           render();
         });
@@ -1184,7 +1318,7 @@
 
     var msgVacio = registros.length
       ? "Ningún registro coincide con el filtro actual."
-      : "Todavía no cargaste compras. Completá el formulario o cargá el escenario del relevamiento.";
+      : "Todavía no cargaste compras. Completá el formulario de arriba o cargá un escenario estimado.";
 
     wrap.appendChild(crearTabla([
       { t: "Año" },
@@ -1200,17 +1334,16 @@
   }
 
   function renderCalculo() {
+    var emptyBar = $("calcEmptyBar");
+    var nextBar = $("calcNextBar");
+    if (emptyBar) emptyBar.hidden = registros.length > 0;
+    if (nextBar) nextBar.hidden = registros.length === 0;
+
     var c = $("tablaCalculo");
     c.innerHTML = "";
     var filasCalc = registros.map(function (r) {
-      var prodFrag = document.createDocumentFragment();
-      prodFrag.appendChild(crearEl("strong", "", r.producto));
-      if (r.usa_demo) {
-        prodFrag.appendChild(document.createTextNode(" "));
-        prodFrag.appendChild(crearEl("span", "badge demo", "demo"));
-      }
       return [
-        prodFrag,
+        crearEl("strong", "", r.producto),
         r.fuente_dato,
         r.trazabilidad,
         fmt(r.masa_kg, 2),
@@ -1220,8 +1353,8 @@
 
     c.appendChild(crearTabla([
       { t: "Producto" },
-      { t: "Fuente" },
-      { t: "Cómo se calculó", cls: "trace-cell" },
+      { t: "Fuente del dato" },
+      { t: "Cuenta paso a paso", cls: "trace-cell" },
       { t: "Masa (kg)", num: true },
       { t: "kg CO₂e", num: true }
     ], filasCalc, "Sin registros cargados para calcular."));
@@ -1229,29 +1362,27 @@
     var f = $("tablaFactores");
     f.innerHTML = "";
     var factoresLista = Object.values(FACTORES).filter(function (x) {
-      if (estadoUI.filtroFactor === "verificados") return !x.demo;
-      if (estadoUI.filtroFactor === "demo") return x.demo;
+      if (estadoUI.filtroFactor === "poore") return String(x.fuente || "").indexOf("Agribalyse") === -1;
+      if (estadoUI.filtroFactor === "agribalyse") return String(x.fuente || "").indexOf("Agribalyse") !== -1;
       return true;
     });
 
     var filasFac = factoresLista.map(function (x) {
-      var estadoBadge = crearEl("span", x.demo ? "badge demo" : "badge verified",
-        x.demo ? "Demo sin fuente" : "Verificado");
       return [
         x.nombre,
         fmt(x.valor, 2),
         x.etapa,
         x.fuente,
-        estadoBadge
+        x.anio_referencia ? String(x.anio_referencia) : "–"
       ];
     });
 
     f.appendChild(crearTabla([
       { t: "Categoría" },
-      { t: "FE (kg CO₂e/kg)", num: true },
-      { t: "Etapa" },
-      { t: "Fuente" },
-      { t: "Estado" }
+      { t: "Factor (kg CO₂e/kg)", num: true },
+      { t: "Etapa incluida" },
+      { t: "Fuente científica" },
+      { t: "Año", num: true }
     ], filasFac, "Sin factores en esta vista."));
   }
 
@@ -1267,7 +1398,7 @@
       var row = crearEl("div", "bar-row");
       var nombre = crearEl("span", "cmp-label", i.n);
       var track = crearEl("div", "track");
-      var fill = crearEl("div", "fill " + (i.demo ? "demo" : (claseFill || "")));
+      var fill = crearEl("div", "fill " + (claseFill || ""));
       fill.style.width = Math.max(0, (i.v / max) * 100) + "%";
       track.appendChild(fill);
       var val = crearEl("span", "bar-val", fmt(i.v, dec !== undefined ? dec : 2) + " " + sufijo);
@@ -1291,10 +1422,10 @@
       var label = crearEl("span", "cmp-label", i.n);
       var pair = crearEl("div", "cmp-pair");
 
-      [["mass", i.masa, false], ["em", i.em, i.demo]].forEach(function (cfg) {
+      [["mass", i.masa], ["em", i.em]].forEach(function (cfg) {
         var line = crearEl("div", "cmp-line");
         var track = crearEl("div", "track");
-        var fill = crearEl("div", "fill " + (cfg[2] ? "demo" : (cfg[0] === "mass" ? "mass" : "")));
+        var fill = crearEl("div", "fill" + (cfg[0] === "mass" ? " mass" : ""));
         fill.style.width = Math.max(0, (cfg[1] / max) * 100) + "%";
         track.appendChild(fill);
         var val = crearEl("span", "bar-val", fmt(cfg[1], 1) + " %");
@@ -1309,38 +1440,25 @@
   }
 
   function renderResultados() {
+    var emptyRes = $("resultadosVacio");
+    if (emptyRes) emptyRes.hidden = registros.length > 0;
+
     var tot = registros.reduce(function (a, r) { return a + r.co2e_kg; }, 0);
     var masa = registros.reduce(function (a, r) { return a + r.masa_kg; }, 0);
-    var demoCo2 = registros.reduce(function (a, r) { return a + (r.co2e_demo_kg || 0); }, 0);
-    var verifCo2 = tot - demoCo2;
-    var regsDemo = registros.filter(function (r) { return r.usa_demo; });
-
-    var aviso = $("avisoDemo");
-    if (regsDemo.length) {
-      aviso.textContent = "Atención: " + regsDemo.length + " de " + registros.length +
-        " registro(s) incluyen factores de demostración (sin fuente) que aportan " +
-        fmt(demoCo2, 1) + " kg CO₂e (" + fmt(tot ? (demoCo2 / tot) * 100 : 0, 1) +
-        " % del total). El subtotal con factores verificados es " + fmt(verifCo2, 1) + " kg CO₂e.";
-      aviso.hidden = false;
-    } else {
-      aviso.textContent = "";
-      aviso.hidden = true;
-    }
-
     var porCategoria = desglosarPorCategoria(registros);
 
     var kpisEl = $("kpis");
     kpisEl.innerHTML = "";
     var topCat = porCategoria[0];
     var kpiItems = [
-      { l: "Total de emisiones", v: fmt(tot, 1) + " kg CO₂e", s: registros.length + " registro(s)" },
-      { l: "Total en toneladas", v: fmt(tot / 1000, 3) + " t CO₂e", s: "Período anual" },
-      { l: "Masa comprada", v: fmt(masa, 1) + " kg", s: "Alimentos y bebidas" },
-      { l: "Intensidad promedio", v: masa ? fmt(tot / masa, 2) + " kg/kg" : "–", s: "kg CO₂e por kg" },
+      { l: "Total anual en kg", v: fmt(tot, 1) + " kg CO₂e", s: registros.length + " registro(s) en el año" },
+      { l: "Total en toneladas", v: fmt(tot / 1000, 3) + " t CO₂e", s: "Equivale a 1 t = 1.000 kg" },
+      { l: "Peso físico comprado", v: fmt(masa, 1) + " kg", s: "Alimentos y bebidas" },
+      { l: "Intensidad promedio", v: masa ? fmt(tot / masa, 2) + " kg/kg" : "–", s: "kg CO₂e por cada kg comprado" },
       {
         l: "Principal emisor",
         v: topCat ? topCat.nombre : "–",
-        s: topCat && tot ? fmt((topCat.co2e_kg / tot) * 100, 1) + " % del total" : "Sin registros"
+        s: topCat && tot ? fmt((topCat.co2e_kg / tot) * 100, 1) + " % del total de CO₂e" : "Sin registros"
       }
     ];
 
@@ -1358,9 +1476,9 @@
     if (porCategoria.length >= 2 && tot > 0 && masa > 0) {
       var top2Co2 = ((porCategoria[0].co2e_kg + porCategoria[1].co2e_kg) / tot) * 100;
       var top2Masa = ((porCategoria[0].masa_kg + porCategoria[1].masa_kg) / masa) * 100;
-      insightEl.textContent = porCategoria[0].nombre + " y " + porCategoria[1].nombre +
+      insightEl.textContent = "Hallazgo clave: " + porCategoria[0].nombre + " y " + porCategoria[1].nombre +
         " concentran el " + fmt(top2Co2, 1) + " % de las emisiones con solo el " +
-        fmt(top2Masa, 1) + " % de la masa comprada.";
+        fmt(top2Masa, 1) + " % del peso físico comprado.";
       insightEl.hidden = false;
     } else {
       insightEl.hidden = true;
@@ -1369,7 +1487,6 @@
     renderBarrasComparadas("gComparar", porCategoria.map(function (c) {
       return {
         n: c.nombre,
-        demo: c.demo,
         em: tot ? (c.co2e_kg / tot) * 100 : 0,
         masa: masa ? (c.masa_kg / masa) * 100 : 0
       };
@@ -1377,21 +1494,21 @@
 
     var itemsDesglose;
     if (estadoUI.metricaGrafico === "masa") {
-      $("subtituloDesglose").textContent = "Ordenado de mayor a menor masa comprada";
+      $("subtituloDesglose").textContent = "Ordenado de mayor a menor peso físico comprado";
       itemsDesglose = porCategoria.slice().sort(function (a, b) { return b.masa_kg - a.masa_kg; }).map(function (c) {
-        return { n: c.nombre, v: c.masa_kg, demo: false };
+        return { n: c.nombre, v: c.masa_kg };
       });
       renderBarras("gDesglose", itemsDesglose, "mass", "kg", 1);
     } else if (estadoUI.metricaGrafico === "pct") {
-      $("subtituloDesglose").textContent = "Participación porcentual sobre el total de emisiones";
+      $("subtituloDesglose").textContent = "Qué porcentaje de la huella total aporta cada categoría";
       itemsDesglose = porCategoria.map(function (c) {
-        return { n: c.nombre, v: tot ? (c.co2e_kg / tot) * 100 : 0, demo: c.demo };
+        return { n: c.nombre, v: tot ? (c.co2e_kg / tot) * 100 : 0 };
       });
       renderBarras("gDesglose", itemsDesglose, "", "%", 1);
     } else {
-      $("subtituloDesglose").textContent = "Ordenado de mayor a menor emisión";
+      $("subtituloDesglose").textContent = "Ordenado de mayor a menor emisión anual";
       itemsDesglose = porCategoria.map(function (c) {
-        return { n: c.nombre, v: c.co2e_kg, demo: c.demo };
+        return { n: c.nombre, v: c.co2e_kg };
       });
       renderBarras("gDesglose", itemsDesglose, "", "kg CO₂e", 1);
     }
@@ -1402,10 +1519,10 @@
       porAnioMapa[k] = (porAnioMapa[k] || 0) + r.co2e_kg;
     });
     var anios = Object.keys(porAnioMapa).sort().map(function (anio) {
-      return { n: anio, v: porAnioMapa[anio], demo: false };
+      return { n: anio, v: porAnioMapa[anio] };
     });
     $("hintAnio").textContent = anios.length <= 1
-      ? "Cargá registros con otro año para comparar períodos entre sí."
+      ? "Mostrando un único año cargado; cargá compras de otro año para compararlos."
       : "Comparativa entre los " + anios.length + " períodos cargados.";
     renderBarras("gAnio", anios, "", "kg CO₂e", 1);
 
@@ -1420,6 +1537,7 @@
   }
 
   function render() {
+    renderContextoDatos();
     renderRailResumen();
     renderLista();
     renderCalculo();
@@ -1516,6 +1634,11 @@
     });
   }
 
+  function irATab(tab) {
+    cambiarTab(tab);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   function bindEventos() {
     var tabButtons = Array.prototype.slice.call(document.querySelectorAll('.tab-btn[role="tab"]'));
     tabButtons.forEach(function (btn, idx) {
@@ -1534,17 +1657,37 @@
       });
     });
 
-    $("btnToggleEscenario").addEventListener("click", function () {
-      var abierto = !$("drawerEscenario").classList.contains("open");
-      setDrawerAbierto(abierto);
+    $("btnToggleGuia").addEventListener("click", function () {
+      setGuiaAbierta(!$("drawerGuia").classList.contains("open"));
+    });
+    $("btnCerrarGuia").addEventListener("click", function () {
+      setGuiaAbierta(false);
     });
 
+    $("btnToggleEscenario").addEventListener("click", function () {
+      setDrawerAbierto(!$("drawerEscenario").classList.contains("open"));
+    });
     $("btnCerrarDrawer").addEventListener("click", function () {
       setDrawerAbierto(false);
     });
 
+    $("btnCambiarEscenarioCtx").addEventListener("click", function () {
+      setDrawerAbierto(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    $("btnIrCalculo").addEventListener("click", function () { irATab("calculo"); });
+    $("btnIrResultados").addEventListener("click", function () { irATab("resultados"); });
+    $("btnIrCargaDesdeCalc").addEventListener("click", function () { irATab("carga"); });
+    $("btnIrResultadosDesdeCalc").addEventListener("click", function () { irATab("resultados"); });
+    $("btnIrCargaDesdeRes").addEventListener("click", function () { irATab("carga"); });
+
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && $("drawerEscenario").classList.contains("open")) {
+      if (e.key !== "Escape") return;
+      if ($("drawerGuia").classList.contains("open")) {
+        setGuiaAbierta(false);
+        $("btnToggleGuia").focus();
+      } else if ($("drawerEscenario").classList.contains("open")) {
         setDrawerAbierto(false);
         $("btnToggleEscenario").focus();
       }
@@ -1553,22 +1696,22 @@
     $("btnDismissToast").addEventListener("click", ocultarToastEscenario);
     $("btnDismissStorage").addEventListener("click", limpiarAlertaStorage);
 
-    $("chkDemoDrawer").addEventListener("change", function () {
-      $("chkDemoEmpty").checked = $("chkDemoDrawer").checked;
+    $("chkBebidasDrawer").addEventListener("change", function () {
+      $("chkBebidasEmpty").checked = $("chkBebidasDrawer").checked;
       actualizarValoresEscenarios();
     });
-    $("chkDemoEmpty").addEventListener("change", function () {
-      $("chkDemoDrawer").checked = $("chkDemoEmpty").checked;
+    $("chkBebidasEmpty").addEventListener("change", function () {
+      $("chkBebidasDrawer").checked = $("chkBebidasEmpty").checked;
       actualizarValoresEscenarios();
     });
 
     document.querySelectorAll("[data-preset]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var drawerAbierto = $("drawerEscenario").classList.contains("open");
-        var incluirDemo = drawerAbierto
-          ? $("chkDemoDrawer").checked
-          : $("chkDemoEmpty").checked;
-        cargarEscenario(btn.dataset.preset, incluirDemo);
+        var incluirBebidas = drawerAbierto
+          ? $("chkBebidasDrawer").checked
+          : $("chkBebidasEmpty").checked;
+        cargarEscenario(btn.dataset.preset, incluirBebidas);
         setDrawerAbierto(false);
       });
     });
@@ -1641,6 +1784,7 @@
         registros.push(nuevo);
       }
 
+      marcarCambioManualEnOrigen();
       guardarRegistros();
       resetearCamposVariables(estadoUI.editandoId !== null);
       render();
@@ -1702,6 +1846,16 @@
       setTimeout(function () { btn.textContent = "Copiar JSON"; }, 1800);
     });
 
+    $("btnVaciarCtx").addEventListener("click", function () {
+      $("vaciarCtxWrap").hidden = true;
+      $("vaciarCtxConfirmWrap").hidden = false;
+    });
+    $("btnVaciarCtxCancel").addEventListener("click", function () {
+      $("vaciarCtxConfirmWrap").hidden = true;
+      $("vaciarCtxWrap").hidden = false;
+    });
+    $("btnVaciarCtxConfirm").addEventListener("click", vaciarTodosLosRegistros);
+
     $("btnBorrar").addEventListener("click", function () {
       $("borrarWrap").hidden = true;
       $("borrarConfirmWrap").hidden = false;
@@ -1710,19 +1864,7 @@
       $("borrarConfirmWrap").hidden = true;
       $("borrarWrap").hidden = false;
     });
-    $("btnBorrarConfirm").addEventListener("click", function () {
-      registros = [];
-      if (estadoUI.editandoId !== null) {
-        resetearCamposVariables(true);
-      }
-      estadoUI.confirmandoBorradoId = null;
-      $("borrarConfirmWrap").hidden = true;
-      $("borrarWrap").hidden = false;
-      $("resEnvio").textContent = "";
-      ocultarToastEscenario();
-      guardarRegistros();
-      render();
-    });
+    $("btnBorrarConfirm").addEventListener("click", vaciarTodosLosRegistros);
   }
 
   /* ============ INICIALIZACIÓN ============ */
@@ -1732,7 +1874,7 @@
     Object.values(FACTORES).forEach(function (f) {
       var opt = document.createElement("option");
       opt.value = f.categoria;
-      opt.textContent = f.nombre + (f.demo ? " (demo)" : "");
+      opt.textContent = f.nombre;
       selCat.appendChild(opt);
     });
 
@@ -1765,7 +1907,7 @@
       ]);
       resultados[0].forEach(function (f) { FACTORES[f.categoria] = f; });
       EDIFICIOS = resultados[1];
-      estado.textContent = CONFIG.API_BASE ? "API central conectada" : "API simulada";
+      estado.textContent = CONFIG.API_BASE ? "API central conectada" : "Modo local (sin servidor)";
       estado.className = CONFIG.API_BASE ? "status-pill ok" : "status-pill";
     } catch (e) {
       estado.textContent = "Error al leer API (" + e.message + ")";
@@ -1774,10 +1916,18 @@
       EDIFICIOS = MOCK_EDIFICIOS;
     }
 
+    var btnEnviar = $("btnEnviar");
+    if (btnEnviar) {
+      btnEnviar.textContent = CONFIG.API_BASE ? "Enviar a la API central" : "Simular envío (API)";
+    }
+
     poblarSelectoresYPlantillas();
     estadoUI.ingredientesForm = [crearIngredienteVacio("carne_vacuna", "", "")];
     var guardados = cargarRegistrosIniciales();
     registros = guardados.map(recalcularRegistro).filter(Boolean);
+    origenDatos = registros.length ? cargarMetaInicial() : null;
+    if (!registros.length) limpiarMeta();
+    setGuiaAbierta(false);
     setDrawerAbierto(false);
     actualizarValoresEscenarios();
     bindEventos();
